@@ -15,26 +15,7 @@ export const useTaskStore = defineStore('taskStore', {
     renderSamples: null,
     jobTypes: ['Image', 'Animation'],
     fileFormat: ['PNG', 'JPEG', 'FFMPEG'],
-    preset: {
-      Lightinig: {
-        renderEngines: 'Workbench',
-        jobTypes: 'Image',
-        fileFormat: 'PNG',
-        resolutionPercentage: 50,
-        renderSamples: 14,
-        resolutionX: 1920,
-        resolutionY: 1080,
-      },
-      finalize: {
-        renderEngines: 'Cycles',
-        jobTypes: 'Animation',
-        fileFormat: 'FFMPEG',
-        resolutionPercentage: 100,
-        renderSamples: 36,
-        resolutionX: 3840,
-        resolutionY: 2160,
-      },
-    },
+    preset: [],
     tasks: [],
   }),
 
@@ -54,9 +35,52 @@ export const useTaskStore = defineStore('taskStore', {
     },
   },
   actions: {
+    // async fetchPresets() {
+    //   try {
+    //     const response = await axios.get('http://127.0.0.1:82/data/jobs/types');
+    //     console.log(response.data);
+    //     this.preset = response.data; // Assign fetched data to preset
+    //   } catch (error) {
+    //     console.error('Error fetching presets:', error);
+    //   }
+    // },
+
+    async fetchPresets() {
+      try {
+        const response = await fetch('http://127.0.0.1:82/data/jobs/types');
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log(response.data);
+        this.preset = data; // Assign fetched data to preset
+      } catch (error) {
+        console.error('Error fetching presets:', error);
+      }
+    },
+
+    //   async fetchTasks() {
+    //     try {
+    //       const response = await fetch('http://127.0.0.1:82/data/jobs');
+    //       if (!response.ok) {
+    //         throw new Error(`HTTP error! status: ${response.status}`);
+    //       }
+    //       const data = await response.json();
+    //       console.log(console.data);
+    //       this.tasks = data;
+    //     } catch (error) {
+    //       console.error('Error fetching tasks:', error);
+    //     }
+    //   },
+
+    // Other imports and code...
+
     async fetchTasks() {
       try {
         const response = await fetch('http://127.0.0.1:5000/getjobs');
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }

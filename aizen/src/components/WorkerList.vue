@@ -16,24 +16,79 @@
           Offline Workers
         </button>
       </div>
+      <div class="add-tasks">
+        <button @click="toggleAddWorker">Add New Worker</button>
+      </div>
     </div>
+
     <div class="main-container">
       <div class="worker-container">
-        <div class="worker-item">
+        <div
+          class="worker-item"
+          v-for="(worker, index) in workerStore.workers"
+          :key="index">
           <span class="item-text">
-            <p class="task-item-title">Worker 1</p>
+            <p class="task-item-title">{{ worker.name }}</p>
           </span>
 
           <span class="item-text">
-            <button class="item-render">Online</button>
+            <button class="item-render">{{ worker.workerStatus }}</button>
           </span>
         </div>
       </div>
     </div>
+    <!--adding model for add -worker-->
+
+    <teleport to="body">
+      <div v-if="addWorker" ref="deleteModalRef">
+        <form class="modals" @submit.prevent="handleSubmit">
+          <h1>this is a mmodal</h1>
+          <input type="text" placeholder="name" v-model="newWorker" />
+          <input
+            type="text"
+            placeholder="worker adress"
+            v-model="workerAdress" />
+
+          <button @click="toggleAddWorker">Cancel</button>
+          <button type="submit">Render</button>
+        </form>
+      </div>
+    </teleport>
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { ref, computed } from 'vue';
+import { onClickOutside } from '@vueuse/core';
+import { useWorkerStore } from '@/stores/WorkerStore';
+
+const workerStore = useWorkerStore();
+const addWorker = ref(false);
+const showModal = ref(false);
+const deleteModalRef = ref(null);
+const newWorker = ref('');
+const workerAdress = ref('');
+
+workerStore.getWorkers();
+
+const toggleAddWorker = () => {
+  addWorker.value = !addWorker.value;
+  showModal.value = false; // Close the modal when toggling addJob
+};
+
+onClickOutside(deleteModalRef, toggleAddWorker);
+const handleSubmit = () => {
+  if (newWorker.value.length > 0) {
+    workerStore.addWorker({
+      name: newWorker.value,
+      workerStatus: workerStore.workerStatus,
+      adress: workerAdress.value,
+    });
+    newWorker.value = '';
+    workerAdress.value = '';
+  }
+};
+</script>
 
 <style scoped>
 .search-option {
@@ -43,9 +98,9 @@
   margin-bottom: 5px;
 }
 .toggle-buttons {
+  display: flex;
   margin-top: 10px;
   margin-bottom: 10px;
-  display: flex;
   gap: 10px;
 }
 .toggle-buttons button {
@@ -56,6 +111,16 @@
   border: none;
   outline: none !important;
   color: white;
+  border-radius: 10px;
+  font-size: 15pt;
+}
+.add-tasks button {
+  margin-top: 10px;
+  position: relative;
+  background-color: #3c8b35;
+  color: #fff;
+  width: 210px;
+  height: 50px;
   border-radius: 10px;
   font-size: 15pt;
 }
@@ -112,5 +177,24 @@
   border: none;
   font-size: 16px;
   background-color: rgb(67, 240, 67);
+}
+.modals {
+  border-radius: 10px;
+  width: 70%;
+  padding: 10px 10px;
+  position: absolute;
+  top: 180px;
+  bottom: 200px;
+  left: 350px;
+  justify-content: center;
+  align-items: center;
+}
+.modals > div {
+  background-color: white;
+  border-radius: 10px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

@@ -32,7 +32,7 @@
           <div class="g">
             <div class="inputs">
               <div class="field-froup">
-                <label for="name" class="input-label"> Name</label>
+                <label for="name" class="input-label"> Job Type Name</label>
 
                 <input
                   type="text"
@@ -42,7 +42,7 @@
                   placeholder=" name" />
               </div>
               <div class="field-froup">
-                <label for="file" class="input-label"> File</label>
+                <label for="file" class="input-label"> File path </label>
                 <input
                   type="text"
                   name="file"
@@ -55,12 +55,13 @@
             <div class="grids">
               <div class="input-modal">
                 <h4>Preset</h4>
-                <select v-model="selectedPreset" @change="updateFields">
+                <select v-model="selectedPreset">
                   <option
-                    v-for="presetKey in presetKeys"
-                    :key="presetKey"
-                    :value="presetKey">
-                    {{ presetKey }}
+                    v-for="preset in taskStore.preset"
+                    :key="preset.name"
+                    :value="preset.id"
+                    v-if="preset && preset.id">
+                    {{ preset.name }}
                   </option>
                 </select>
               </div>
@@ -78,20 +79,26 @@
 
               <div class="input-modal">
                 <h4>Render Type</h4>
-                <select v-model="taskStore.jobTypes">
+                <select v-model="presetKeys">
                   <option v-for="jobType in jobTypes" :key="jobType">
                     {{ jobType }}
                   </option>
                 </select>
               </div>
 
-              <div class="input-modal">
+              <!-- <div class="input-modal">
                 <h4>File Format</h4>
                 <select v-model="taskStore.fileFormat">
                   <option v-for="file in fileFormat" :key="file">
                     {{ file }}
                   </option>
                 </select>
+              </div> -->
+              <div class="input-modal">
+                <h4>priority</h4>
+                <div class="render-input">
+                  <input type="number" v-model="priority" />
+                </div>
               </div>
             </div>
 
@@ -159,18 +166,18 @@
           v-for="(task, index) in taskStore.tasks"
           :key="index">
           <span class="item-text"
-            ><p class="task-item-title">{{ task.job_name }}</p></span
+            ><p class="task-item-title">{{ task.job_type_name }}</p></span
           >
           <span class="item-text"
             ><p
               class="task-item-status"
               :class="{
-                pending: task.job_status === 'pending',
-                running: task.job_status === 'running',
-                completed: task.job_status === 'completed',
-                failed: task.job_status === 'failed',
+                pending: task.jobStatus === 'pending',
+                running: task.jobStatus === 'running',
+                completed: task.jobStatus === 'completed',
+                failed: task.jobStatus === 'failed',
               }">
-              {{ task.job_status }}
+              {{ task.jobStatus }}
             </p></span
           >
 
@@ -239,7 +246,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 import { useTaskStore } from '@/stores/TaskStore';
 useTaskStore().fetchTasks();
@@ -252,7 +259,7 @@ const deleteModalRef = ref(null);
 
 const renderEngines = taskStore.renderEngines;
 const jobTypes = taskStore.jobTypes;
-const fileFormat = taskStore.fileFormat;
+// const fileFormat = taskStore.fileFormat;
 const jobStatus = taskStore.jobStatus;
 const renderSamples = ref('');
 const jobFilePath = ref('');
@@ -279,16 +286,21 @@ const toggleModalBlur = (isBlurred) => {
   document.body.classList.toggle('blur-body', isBlurred);
 };
 
+const selectedPresetData = computed(() => {
+  return taskStore.preset.find((preset) => preset.id === selectedPreset.value);
+});
+
 const handleSubmit = async () => {
   try {
     const newTask = {
-      job_name: jobName.value,
-      job_file: jobFilePath.value,
+      name: jobName.value,
+      file_path: jobFilePath.value,
+      preset: job_type_name,
       render_engine: taskStore.renderEngines,
-      job_status: taskStore.jobStatus,
-      priority: taskStore.priority,
+      status: taskStore.jobStatus,
       render_type: taskStore.jobTypes,
-      file_format: taskStore.fileFormat,
+      // file_format: taskStore.fileFormat,
+      priority: taskStore.priority.value,
       render_samples: renderSamples.value,
       resolution_x: resolutionX.value,
       resolution_y: resolutionY.value,
@@ -297,25 +309,23 @@ const handleSubmit = async () => {
       resolution_percentage: resolutionPercentage.value,
     };
 
-    const response = await fetch('http://127.0.0.1:5000/addjob', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newTask),
-    });
-    console.log(newTask);
+    const response = await axios.post(
+      'http://127.0.0.1:82/data/jobs',
+      newTask,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
 
-    if (!response.ok) {
-      console.log(await response.json());
-      // console.log(await response.text());
-      throw new Error('Failed to add task');
-    }
+    console.log('Task submitted successfully:', response.data); // Log success message
 
     addJob.value = false;
     toggleModalBlur(false); // Remove blur effect when modal is closed
   } catch (error) {
     console.error('Error adding task:', error);
+    // Handle potential errors (e.g., display a message to the user)
   }
 };
 
@@ -350,7 +360,13 @@ const updateFields = () => {
     renderSamples.value = preset.renderSamples;
   }
 };
+onMounted(() => {
+  taskStore.fetchPresets(); // Fetch presets when the component is mounted
+});
 
+onMounted(() => {
+  taskStore.fetchTasks();
+});
 // Call toggleModalBlur(true) when modal is opened
 // Call toggleModalBlur(false) when modal is closed
 </script>

@@ -1,0 +1,40 @@
+{
+  "workers": [
+    {
+      "name": "worekr 1",
+      "workerStatus": "online",
+      "address": "jdojfijfd",
+      "id": "c996"
+    },
+    {
+      "name": "worekr 2",
+      "workerStatus": "offline",
+      "workerAddress": "iuxfiug",
+      "id": "6828"
+    },
+    {
+      "name": "worekr 3",
+      "workerStatus": "online",
+      "workerAddress": "hgdfsdfs",
+      "id": "2753"
+    },
+    {
+      "name": "worekr 4",
+      "workerStatus": "offline",
+      "workerAddress": "hgsdfgsdfs",
+      "id": "5bd9"
+    },
+    {
+      "id": "f46a",
+      "name": "zzzz",
+      "workerStatus": "idle",
+      "adress": "ddddd"
+    },
+    {
+      "id": "b52d",
+      "name": "dasdada",
+      "workerStatus": "idle",
+      "adress": "asdadad"
+    }
+  ]
+}
