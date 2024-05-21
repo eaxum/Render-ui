@@ -17,7 +17,7 @@ import WorkerList from '@/components/WorkerList.vue';
 <style scoped>
 main {
   font-family: 'poppins', sans-serif;
-  background-color: #161a25;
+  background-color: #4b356b;
   width: 100%;
   height: 97vh;
 }

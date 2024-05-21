@@ -16,9 +16,6 @@
           Offline Workers
         </button>
       </div>
-      <div class="add-tasks">
-        <button @click="toggleAddWorker">Add New Worker</button>
-      </div>
     </div>
 
     <div class="main-container">
@@ -38,22 +35,6 @@
       </div>
     </div>
     <!--adding model for add -worker-->
-
-    <teleport to="body">
-      <div v-if="addWorker" ref="deleteModalRef">
-        <form class="modals" @submit.prevent="handleSubmit">
-          <h1>this is a mmodal</h1>
-          <input type="text" placeholder="name" v-model="newWorker" />
-          <input
-            type="text"
-            placeholder="worker adress"
-            v-model="workerAdress" />
-
-          <button @click="toggleAddWorker">Cancel</button>
-          <button type="submit">Render</button>
-        </form>
-      </div>
-    </teleport>
   </div>
 </template>
 
