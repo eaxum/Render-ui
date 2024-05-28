@@ -10,9 +10,11 @@ export const useWorkerStore = defineStore('workerStore', {
   getters: {},
   actions: {
     async getWorkers() {
+      let url = "'http://localhost:3000/workers'";
+      let testUrl = "'http://localhost:5000/workers'";
       this.loading = true;
       try {
-        const response = await axios.get('http://localhost:3000/workers');
+        const response = await axios.get(testUrl);
         this.workers = response.data;
       } catch (error) {
         console.error('Error fetching workers:', error);

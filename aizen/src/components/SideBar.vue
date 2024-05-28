@@ -17,7 +17,7 @@
           <span class="quality action-column">
             <img class="icons" src="./../assets/jobs.png" alt="Quality Icon" />
           </span>
-          <p class="job-text">jobs</p>
+          <!-- <p class="job-text">jobs</p> -->
         </router-link>
 
         <router-link
@@ -28,7 +28,7 @@
           <span class="quality action-column">
             <img class="icons" src="./../assets/nodes.png" alt="Quality Icon" />
           </span>
-          <p class="node-text">workers</p>
+          <!-- <p class="node-text">workers</p> -->
         </router-link>
       </div>
     </aside>
@@ -136,12 +136,21 @@ aside {
 .icons {
   width: 3rem;
   padding: 0.7rem;
-  background-color: #8f8f8f;
+  background: linear-gradient(
+    to bottom,
+    #476191,
+    #76359e
+  ); /* Gradient from top to bottom with a touch of purple */
   border-radius: 20px;
-  transition: 0.2s ease;
 }
+
 .icons:hover {
-  background-color: #c5bebe;
+  background: linear-gradient(
+    to bottom,
+    #7c94be,
+    #804f9e
+  ); /* Gradient from top to bottom with a touch of purple */
+  transition: 0.2s ease;
 }
 
 .logo img {
@@ -180,6 +189,8 @@ aside {
   padding: 0.5rem 1rem;
   margin-bottom: 7px;
   transition: 0.2s ease;
+  border-radius: 5px; /* Add border-radius for rounded corners */
+  transition: background-color 0.3s ease; /* Add transition for background color */
 }
 
 .button .material-icons {
@@ -200,7 +211,6 @@ aside {
 
 .is-expanded {
   width: 3.7rem;
-  background-color: #8f8f8f;
 }
 
 .setting-text {

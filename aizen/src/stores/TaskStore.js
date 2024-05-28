@@ -10,12 +10,12 @@ export const useTaskStore = defineStore('taskStore', {
     resolutionX: null,
     resolutionY: null,
     resolutionPercentage: null,
-    renderEngines: ['Eevee', 'Cycles', 'Workbench'],
+    renderEngines: [],
     priority: null,
     renderSamples: null,
-    jobTypes: ['Image', 'Animation'],
-    fileFormat: ['PNG', 'JPEG', 'FFMPEG'],
-    preset: [],
+    // jobTypes: ['Image', 'Animation'],
+    // fileFormat: ['PNG', 'JPEG', 'FFMPEG'],
+    presets: [],
     tasks: [],
   }),
 
@@ -48,14 +48,15 @@ export const useTaskStore = defineStore('taskStore', {
     async fetchPresets() {
       try {
         const response = await fetch('http://127.0.0.1:82/data/jobs/types');
-
+        console.log();
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const data = await response.json();
-        console.log(response.data);
-        this.preset = data; // Assign fetched data to preset
+        console.log(data);
+        console.log(data.render_engine);
+        this.presets = data; // Assign fetched data to preset
       } catch (error) {
         console.error('Error fetching presets:', error);
       }
@@ -79,7 +80,7 @@ export const useTaskStore = defineStore('taskStore', {
 
     async fetchTasks() {
       try {
-        const response = await fetch('http://127.0.0.1:5000/getjobs');
+        const response = await fetch('http://127.0.0.1:82/data/jobs');
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);

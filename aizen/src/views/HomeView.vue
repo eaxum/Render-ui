@@ -17,7 +17,7 @@ import TaskItems from '@/components/TaskItems.vue';
 <style scoped>
 main {
   font-family: 'poppins', sans-serif;
-  background-color: #4b356b;
+  background-color: #6b4a9c;
   border-radius: 20px;
   width: 100%;
   height: 97vh;

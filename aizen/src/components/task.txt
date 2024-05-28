@@ -21,6 +21,7 @@
           Failed Jobs
         </button>
       </div>
+
       <div class="add-tasks">
         <button @click="toggleAddJob">Add New Task</button>
       </div>
@@ -30,83 +31,86 @@
         <form class="modals" @submit.prevent="handleSubmit">
           <div class="g">
             <div class="inputs">
-              <div class="field-group">
-                <label for="name" class="input-label">Job Name</label>
+              <div class="field-froup">
+                <label for="name" class="input-label"> Job Name</label>
+
                 <input
                   type="text"
                   name="name"
                   class="input-field"
                   v-model="jobName"
-                  placeholder="name" />
+                  placeholder=" name" />
               </div>
-              <div class="field-group">
-                <label for="file" class="input-label">File path</label>
+              <div class="field-froup">
+                <label for="file" class="input-label"> File path </label>
                 <input
                   type="text"
                   name="file"
                   v-model="jobFilePath"
                   class="input-field"
-                  placeholder="file-path" />
+                  placeholder=" file-path" />
               </div>
             </div>
+
             <div class="grids">
-              <div class="input-modal">
+              <!-- <div class="input-modal">
                 <h4>Preset</h4>
                 <select v-model="selectedPreset">
                   <option
-                    v-for="preset in taskStore.presets"
-                    :key="preset.id"
-                    :value="preset.id">
+                    v-for="preset in taskStore.preset"
+                    :key="preset.name"
+                    :value="preset.id"
+                    v-if="preset && preset.id">
                     {{ preset.name }}
-                  </option>
-                </select>
-              </div>
-              <!-- <div class="input-modal">
-                <h4>Render Engine</h4>
-                <select v-model="taskStore.renderEngines">
-                  <option
-                    v-for="engine in taskStore.renderEngines"
-                    :key="engine"
-                    :value="engine">
-                    {{ engine }}
-                  </option>
-                </select>
-              </div> -->
-              <!-- <div class="input-modal">
-                <h4>Render Type</h4>
-                <select v-model="taskStore.jobTypes">
-                  <option
-                    v-for="jobType in taskStore.jobTypes"
-                    :key="jobType"
-                    :value="jobType">
-                    {{ jobType }}
                   </option>
                 </select>
               </div> -->
               <div class="input-modal">
-                <h4>Priority</h4>
+                <h4>preset</h4>
+                <select v-model="taskStore.preset">
+                  <option v-for="preset in presets" :key="preset" required>
+                    {{ preset }}
+                  </option>
+                </select>
+              </div>
+              <div class="input-modal">
+                <h4>Render Engine</h4>
+                <select v-model="taskStore.renderEngines">
+                  <option
+                    v-for="engine in renderEngines"
+                    :key="engine"
+                    required>
+                    {{ engine }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="input-modal">
+                <h4>Render Type</h4>
+                <select v-model="presetKeys">
+                  <option v-for="jobType in jobTypes" :key="jobType">
+                    {{ jobType }}
+                  </option>
+                </select>
+              </div>
+
+              <!-- <div class="input-modal">
+                <h4>File Format</h4>
+                <select v-model="taskStore.fileFormat">
+                  <option v-for="file in fileFormat" :key="file">
+                    {{ file }}
+                  </option>
+                </select>
+              </div> -->
+              <div class="input-modal">
+                <h4>priority</h4>
                 <div class="render-input">
                   <input type="number" v-model="priority" />
                 </div>
               </div>
-              <div class="input-modal">
-                <h4>Resolution (%)</h4>
-                <div class="render-input">
-                  <input
-                    type="number"
-                    v-model="resolutionPercentage"
-                    placeholder="resolution Percentage" />
-                </div>
-              </div>
             </div>
-            <div class="grids">
-              <!-- <div class="input-modal">
-                <h4>Render Samples</h4>
-                <div class="render-input">
-                  <input type="number" v-model="renderSamples" />
-                </div>
-              </div> -->
 
+            <div class="grids">
               <div class="input-modal">
                 <h4>Frame Range</h4>
                 <div class="input-wrapper">
@@ -117,16 +121,40 @@
                   <input
                     type="number"
                     v-model="frameRangeY"
-                    placeholder="frame-Y" />
+                    placeholder=" frame-Y" />
                 </div>
               </div>
-              <!-- <div class="input-modal">
+
+              <div class="input-modal">
+                <h4>Render Samples</h4>
+                <div class="render-input">
+                  <input type="number" v-model="renderSamples" />
+                </div>
+              </div>
+
+              <div class="input-modal">
+                <h4>Resolution (%)</h4>
+                <div class="render-input">
+                  <input
+                    type="number"
+                    v-model="resolutionPercentage"
+                    placeholder="resolution Percentage" />
+                </div>
+              </div>
+
+              <div class="input-modal">
                 <h4>Resolution</h4>
                 <div class="input-wrapper">
-                  <input type="number" v-model="resolutionX" />
-                  <input type="number" v-model="resolutionY" />
+                  <input
+                    type="number"
+                    v-model="resolutionX"
+                    placeholder="resolution-X" />
+                  <input
+                    type="number"
+                    v-model="resolutionY"
+                    placeholder=" resolution-Y" />
                 </div>
-              </div> -->
+              </div>
             </div>
             <div class="buttons">
               <div class="first">
@@ -138,67 +166,126 @@
         </form>
       </div>
     </teleport>
+
     <div class="main-container">
       <div class="task-container" v-if="filter === 'all'">
         <div
           class="task-item"
           v-for="(task, index) in taskStore.tasks"
           :key="index">
-          <span class="item-text">
-            <p class="task-item-title">{{ task.name }}</p>
-          </span>
-          <span class="item-text">
-            <p
+          <span class="item-text"
+            ><p class="task-item-title">{{ task.job_type_name }}</p></span
+          >
+          <span class="item-text"
+            ><p
               class="task-item-status"
               :class="{
-                pending: task.status === 'pending',
-                running: task.status === 'running',
-                completed: task.status === 'completed',
-                failed: task.status === 'failed',
+                pending: task.jobStatus === 'pending',
+                running: task.jobStatus === 'running',
+                completed: task.jobStatus === 'completed',
+                failed: task.jobStatus === 'failed',
               }">
-              {{ task.status }}
-            </p>
+              {{ task.jobStatus }}
+            </p></span
+          >
+
+          <span class="item-text"
+            ><button class="item-render" @click="removeTask(task.id)">
+              Remove
+            </button></span
+          >
+        </div>
+      </div>
+
+      <div class="task-container" v-if="filter === 'rendered'">
+        <div
+          class="task-item"
+          v-for="(task, index) in taskStore.renderedTasks"
+          :key="index">
+          <span class="item-text">
+            <p class="task-item-title">{{ task.job_name }}</p>
           </span>
           <span class="item-text">
-            <button class="item-render" @click="removeTask(task.id)">
-              Remove
-            </button>
+            <p class="task-item-status">{{ task.job_status }}</p>
+          </span>
+          <span class="item-text">
+            <button class="item-render">Remove</button>
           </span>
         </div>
       </div>
-      <!-- Similarly for other filters like rendered, rendering, failed -->
+
+      <div class="task-container" v-if="filter === 'rendering'">
+        <div
+          class="task-item"
+          v-for="(task, index) in taskStore.renderingTasks"
+          :key="index">
+          <span class="item-text"
+            ><p class="task-item-title">{{ task.job_name }}</p></span
+          >
+          <span class="item-text"
+            ><p class="task-item-status">{{ task.job_status }}</p></span
+          >
+
+          <span class="item-text"
+            ><button class="item-render">Remove</button></span
+          >
+        </div>
+      </div>
+
+      <div class="task-container" v-if="filter === 'failed'">
+        <div
+          class="task-item"
+          v-for="(task, index) in taskStore.failedTasks"
+          :key="index">
+          <span class="item-text"
+            ><p class="task-item-title">{{ task.job_name }}</p></span
+          >
+          <span class="item-text"
+            ><p class="task-item-status">{{ task.job_status }}</p></span
+          >
+
+          <span class="item-text"
+            ><button class="item-render">Remove</button></span
+          >
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 import { useTaskStore } from '@/stores/TaskStore';
-import axios from 'axios';
+useTaskStore().fetchTasks();
 
-const taskStore = useTaskStore();
 const filter = ref('all');
+const taskStore = useTaskStore();
 const addJob = ref(false);
 const showModal = ref(false);
 const deleteModalRef = ref(null);
 
-const jobName = ref('');
+const renderEngines = taskStore.renderEngines;
+const jobTypes = taskStore.jobTypes;
+// const fileFormat = taskStore.fileFormat;
+const jobStatus = taskStore.jobStatus;
+const renderSamples = ref('');
 const jobFilePath = ref('');
 const priority = ref('');
-const resolutionX = ref(1920);
-const resolutionY = ref(1080);
-const frameRangeX = ref('');
-const frameRangeY = ref('');
-const renderSamples = ref(100);
-const resolutionPercentage = ref('');
+const jobName = ref('');
+let resolutionX = ref(1920);
+let resolutionY = ref(1080);
+let frameRangeX = ref('');
+let frameRangeY = ref('');
 const selectedPreset = ref('');
-const renderEngine = ref('');
+const resolutionPercentage = ref('');
+
+const presetKeys = computed(() => Object.keys(taskStore.presets));
 
 const toggleAddJob = () => {
   addJob.value = !addJob.value;
-  showModal.value = false;
-  toggleModalBlur(addJob.value);
+  showModal.value = false; // Close the modal when toggling addJob
+  toggleModalBlur(addJob.value); // Add blur effect when modal is open
 };
 
 onClickOutside(deleteModalRef, toggleAddJob);
@@ -207,69 +294,89 @@ const toggleModalBlur = (isBlurred) => {
   document.body.classList.toggle('blur-body', isBlurred);
 };
 
+const selectedPresetData = computed(() => {
+  return taskStore.preset.find((preset) => preset.id === selectedPreset.value);
+});
+
 const handleSubmit = async () => {
-  const preset = taskStore.presets.find((p) => p.id === selectedPreset.value);
-
-  const jobTypeName = preset ? preset.name : '';
-
   try {
     const newTask = {
-      job_type_name: jobTypeName, // Use the name of the preset
       name: jobName.value,
       file_path: jobFilePath.value,
-      resolution_Percentage: resolutionPercentage.value,
-      priority: priority.value,
-      start_frame: frameRangeX.value,
-      end_frame: frameRangeY.value,
+      preset: job_type_name,
+      render_engine: taskStore.renderEngines,
+      status: taskStore.jobStatus,
+      render_type: taskStore.jobTypes,
+      // file_format: taskStore.fileFormat,
+      priority: taskStore.priority.value,
+      render_samples: renderSamples.value,
+      resolution_x: resolutionX.value,
+      resolution_y: resolutionY.value,
+      frame_start: frameRangeX.value,
+      frame_end: frameRangeY.value,
+      resolution_percentage: resolutionPercentage.value,
     };
 
-    console.log('Sending payload:', newTask);
+    const response = await axios.post(
+      'http://127.0.0.1:82/data/jobs',
+      newTask,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
 
-    const response = await fetch('http://127.0.0.1:82/data/jobs', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newTask),
-    });
+    console.log('Task submitted successfully:', response.data); // Log success message
 
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-
-    const data = await response.json();
-    console.log('Response data:', data);
-
-    taskStore.fetchTasks();
-    toggleAddJob();
+    addJob.value = false;
+    toggleModalBlur(false); // Remove blur effect when modal is closed
   } catch (error) {
-    console.error('Error adding job:', error);
+    console.error('Error adding task:', error);
+    // Handle potential errors (e.g., display a message to the user)
   }
 };
 
-onMounted(async () => {
-  await taskStore.fetchPresets();
-  await taskStore.fetchTasks();
-  selectedPreset.value = taskStore.presets[0].id;
-});
-
-watch(selectedPreset, (newPresetId) => {
-  const preset = taskStore.presets.find((p) => p.id === newPresetId);
-  if (preset) {
-    frameRangeX.value = preset.start_frame;
-    frameRangeY.value = preset.end_frame;
-    resolutionPercentage.value = preset.resolution_percentage;
-  }
-});
-
 const removeTask = async (taskId) => {
   try {
-    await axios.delete(`http://127.0.0.1:82/data/jobs/${taskId}`);
+    // Send a request to your backend API to remove the task
+    const response = await fetch(`http://127.0.0.1:5000/deletjob/${taskId}`, {
+      method: 'DELETE',
+    });
+
+    // Check if the request was successful
+    if (!response.ok) {
+      throw new Error('Failed to remove task');
+    }
+
+    // Update the task list by fetching tasks again
     taskStore.fetchTasks();
   } catch (error) {
     console.error('Error removing task:', error);
   }
 };
+
+const updateFields = () => {
+  if (selectedPreset.value) {
+    const preset = taskStore.presets[selectedPreset.value];
+    // Update input field values with preset values
+    resolutionX.value = preset.resolutionX;
+    resolutionY.value = preset.resolutionY;
+    taskStore.renderEngines = preset.renderEngines;
+    taskStore.jobTypes = preset.jobTypes;
+    taskStore.fileFormat = preset.fileFormat;
+    renderSamples.value = preset.renderSamples;
+  }
+};
+onMounted(() => {
+  taskStore.fetchPresets(); // Fetch presets when the component is mounted
+});
+
+onMounted(() => {
+  taskStore.fetchTasks();
+});
+// Call toggleModalBlur(true) when modal is opened
+// Call toggleModalBlur(false) when modal is closed
 </script>
 
 <style scoped>
@@ -330,9 +437,8 @@ const removeTask = async (taskId) => {
   margin-left: 10px;
 }
 .inputs {
-  margin-left: 60px;
   display: flex;
-  gap: 160px;
+  gap: 200px;
   justify-content: center;
   align-items: center;
 }
@@ -389,18 +495,13 @@ const removeTask = async (taskId) => {
 
 .main-container {
   font-family: 'poppins', sans-serif;
-  background: linear-gradient(
-    to bottom,
-    #2e1652,
-    #4b3a78
-  ); /* Example gradient */
+  background-color: #292a39;
   position: relative;
   height: 88vh;
   border-radius: 15px;
   overflow-y: auto;
   overflow-x: hidden;
 }
-
 .main-container::-webkit-scrollbar {
   width: 15px; /* Adjust width as needed */
 }
@@ -484,14 +585,12 @@ const removeTask = async (taskId) => {
 .add-tasks button {
   margin-top: 10px;
   position: relative;
-  background-color: #128f07;
+  background-color: #3c8b35;
   color: #fff;
   width: 210px;
   height: 50px;
   border-radius: 10px;
   font-size: 15pt;
-  border: none;
-  outline: none;
 }
 .header-wrapper-container {
   /*background-color: blue;*/
@@ -584,21 +683,6 @@ const removeTask = async (taskId) => {
   top: 10px;
   text-align: center;
   font-size: 16pt;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-.item-text-wrapper {
-  white-space: nowrap; /* Prevents text from wrapping to the next line */
-  overflow: hidden; /* Hides overflowed text */
-  text-overflow: ellipsis; /* Adds ellipsis (...) to overflowed text */
-  margin-left: 20px;
-  margin-right: 110px;
-  color: white;
-  width: 60px;
-  top: 10px;
-  text-align: center;
-  font-size: 16pt;
 }
 .task-item-status {
   color: black;
@@ -609,8 +693,8 @@ const removeTask = async (taskId) => {
   width: 150px;
   height: 15px;
   padding: 7px;
-  font-size: 19px;
-  background-color: #d1d1d1;
+  font-size: 16px;
+  background-color: #fff;
   border-radius: 30px;
   margin-right: 0px;
 }
@@ -624,7 +708,6 @@ const removeTask = async (taskId) => {
 }
 
 .item-render {
-  color: white;
   padding: 10px 50px;
   border-radius: 10px;
   border: none;
@@ -747,3 +830,104 @@ select {
   background-color: #f44336 !important; /* Light red for failed */
 }
 </style>
+
+
+
+*TASKSTORE*
+
+
+import { defineStore } from 'pinia';
+import axios from 'axios'; // Import Axios for making HTTP requests
+
+export const useTaskStore = defineStore('taskStore', {
+  state: () => ({
+    isLoading: false,
+    jobStatus: 'idle',
+    frameRangeX: null,
+    frameRangeY: null,
+    resolutionX: null,
+    resolutionY: null,
+    resolutionPercentage: null,
+    renderEngines: ['Eevee', 'Cycles', 'Workbench'],
+    priority: null,
+    renderSamples: null,
+    jobTypes: ['Image', 'Animation'],
+    fileFormat: ['PNG', 'JPEG', 'FFMPEG'],
+    presets: [],
+    tasks: [],
+  }),
+
+  getters: {
+    // rendered() {
+    //   return this.tasks.filter((status) => status.rendered);
+    // },
+
+    renderedTasks() {
+      return this.tasks.filter((task) => task.job_status === 'Completed');
+    },
+    renderingTasks() {
+      return this.tasks.filter((task) => task.job_status === 'Rendering');
+    },
+    failedTasks() {
+      return this.tasks.filter((task) => task.job_status === 'failed');
+    },
+  },
+  actions: {
+    // async fetchPresets() {
+    //   try {
+    //     const response = await axios.get('http://127.0.0.1:82/data/jobs/types');
+    //     console.log(response.data);
+    //     this.preset = response.data; // Assign fetched data to preset
+    //   } catch (error) {
+    //     console.error('Error fetching presets:', error);
+    //   }
+    // },
+
+    async fetchPresets() {
+      try {
+        const response = await fetch('http://127.0.0.1:82/data/jobs/types');
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log(data);
+        this.presets = data; // Assign fetched data to preset
+      } catch (error) {
+        console.error('Error fetching presets:', error);
+      }
+    },
+
+    //   async fetchTasks() {
+    //     try {
+    //       const response = await fetch('http://127.0.0.1:82/data/jobs');
+    //       if (!response.ok) {
+    //         throw new Error(`HTTP error! status: ${response.status}`);
+    //       }
+    //       const data = await response.json();
+    //       console.log(console.data);
+    //       this.tasks = data;
+    //     } catch (error) {
+    //       console.error('Error fetching tasks:', error);
+    //     }
+    //   },
+
+    // Other imports and code...
+
+    async fetchTasks() {
+      try {
+        const response = await fetch('http://127.0.0.1:82/data/jobs');
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log(data);
+        this.tasks = data;
+      } catch (error) {
+        console.error('Error fetching tasks:', error);
+      }
+    },
+  },
+});
