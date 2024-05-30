@@ -274,7 +274,9 @@ const removeTask = async (taskId) => {
 
 <style scoped>
 .container {
-  height: 50px;
+  display: flex; /* Use flexbox for layout */
+  flex-direction: column;
+  height: 100%;
 }
 .grids {
   margin-top: 50px;
@@ -346,11 +348,11 @@ const removeTask = async (taskId) => {
   width: 500px;
   outline: 0;
   border: 0;
-  border-bottom: 2px solid #999999;
+  border-bottom: 2px solid #fff;
+  color: #fff;
   padding: 0px 0;
   background: transparent;
-  font-size: 28px;
-  color: black;
+  font-size: 26px;
   transition: 0.3s ease;
 }
 .input-label {
@@ -359,7 +361,7 @@ const removeTask = async (taskId) => {
   top: 20px;
   font-size: 12pt;
   font-family: 'poppins', sans-serif;
-  color: #999999;
+  color: #fff;
   text-transform: uppercase;
   transition: 0.3s ease;
 }
@@ -388,12 +390,9 @@ const removeTask = async (taskId) => {
 }
 
 .main-container {
+  width: 100%; /* Use 100% width to make it responsive */
   font-family: 'poppins', sans-serif;
-  background: linear-gradient(
-    to bottom,
-    #2e1652,
-    #4b3a78
-  ); /* Example gradient */
+  background: linear-gradient(to bottom, #2e1652, #4b3a78);
   position: relative;
   height: 88vh;
   border-radius: 15px;
@@ -536,9 +535,9 @@ const removeTask = async (taskId) => {
   letter-spacing: -0.36px;
 }
 .task-container {
+  width: 100%;
   border-radius: 10px;
   margin-top: 20px;
-  width: 1885px;
   align-items: center;
   overflow-y: auto;
 }
@@ -551,22 +550,7 @@ const removeTask = async (taskId) => {
   margin-bottom: 80px;
 }
 .task-item {
-  /* flex: 2;
-  padding: auto 5px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  /* gap: 10px;
-  border-radius: 10px;
-  cursor: pointer;
-  justify-content: space-between;
-  margin-top: 5px;
-  margin-right: 25px;
-  margin-left: 10px;
-   display: flex;
-  flex-direction: row;
-  align-items: center;
-  /* gap: 10px; */
+  position: inherit;
   background: #3b3d75;
   display: flex;
   justify-content: space-between;
@@ -575,6 +559,9 @@ const removeTask = async (taskId) => {
   margin-left: 10px;
   align-items: center;
   cursor: pointer;
+  width: calc(
+    100% - 20px
+  ); /* Adjust the width to fit within the parent container */
 }
 .item-text {
   margin-left: 20px;
@@ -633,27 +620,30 @@ const removeTask = async (taskId) => {
 }
 
 .modals {
+  position: fixed; /* Fixes the modal to the viewport */
+  top: 50%; /* Centers the modal vertically */
+  left: 50%; /* Centers the modal horizontally */
+  transform: translate(
+    -50%,
+    -50%
+  ); /* Adjusts the position to keep it centered */
   border-radius: 10px;
-  width: 70%;
-  padding: 10px 10px;
-  position: absolute;
-  top: 180px;
-  bottom: 200px;
-  left: 350px;
-  justify-content: center;
-  align-items: center;
+  width: 90%; /* Use a percentage to make it responsive */
+  max-width: 1400px; /* Set a max-width to prevent it from becoming too wide */
+  padding: 20px; /* Add some padding */
+  background-color: #2c2e4e; /* Background color of the modal */
+  z-index: 1000; /* Ensure it stays on top of other elements */
+  overflow: auto; /* Ensure it scrolls if the content is too large */
 }
-.modal-input {
-  position: relative;
-  padding: 0 20px;
-  gap: 10px;
-  margin-top: 10px;
-  margin-right: 10px;
-  margin-left: 10px;
-  width: 200px;
-  height: 150px;
-  border-radius: 20px;
-  background: rgb(174, 174, 228);
+
+.modals > div {
+  background-color: #2c2e4e;
+  border-radius: 10px;
+  width: 100%; /* Make it take the full width of the .modals container */
+  height: 600px;
+  /* Let it adjust the height based on its content */
+  max-height: 90vh; /* Ensure it doesn't exceed the viewport height */
+  overflow: auto; /* Allow scrolling if content overflows */
 }
 .modal-input h4 {
   font-size: 20px;
@@ -676,7 +666,6 @@ const removeTask = async (taskId) => {
   background-color: #2c2e4e;
   border-radius: 10px;
   width: 1360px;
-  height: 700px;
 }
 .grid {
   top: 20;

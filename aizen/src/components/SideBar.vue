@@ -22,7 +22,7 @@
 
         <router-link
           class="button"
-          to="about"
+          to="worker"
           @mouseover="showNodeText(true)"
           @mouseleave="showNodeText(false)">
           <span class="quality action-column">
@@ -36,18 +36,17 @@
 </template>
 
 <script setup>
-const showShotText = (isHovering) => {
-  const shotText = document.querySelector('.shot-text');
-  shotText.style.visibility = isHovering ? 'visible' : 'hidden';
-};
-const showJobText = (isHovering) => {
-  const jobText = document.querySelector('.job-text');
-  jobText.style.visibility = isHovering ? 'visible' : 'hidden';
-};
-const showNodeText = (isHovering) => {
-  const nodeText = document.querySelector('.node-text');
-  nodeText.style.visibility = isHovering ? 'visible' : 'hidden';
-};
+// const showShotText = (isHovering) => {
+//   const shotText = document.querySelector('.shot-text');
+//   shotText.style.visibility = isHovering ? 'visible' : 'hidden';
+// };
+// const showJobText = (isHovering) => {
+//   const jobText = document.querySelector('.job-text');
+//   jobText.style.visibility = isHovering ? 'visible' : 'hidden';
+// };
+// const showNodeText = (isHovering) => {
+//   const nodeText = document.querySelector('.node-text');
+//   nodeText.style.visibility = isHovering ? 'visible' : 'hidden';
 </script>
 
 <style scoped>
