@@ -17,7 +17,7 @@ import TaskItems from '@/components/TaskItems.vue';
 <style scoped>
 main {
   font-family: 'poppins', sans-serif;
-  background-color: #6b4a9c;
+  background-color: #4b356b;
   width: 100%;
   height: 100%;
 }
@@ -29,5 +29,15 @@ body {
 }
 main::-webkit-scrollbar {
   display: none; /* This hides the scrollbar */
+}
+@media screen and (max-width: 768px) {
+  /* Stack SideBar and TaskItems vertically */
+  body {
+    flex-direction: row; /* Change to column layout */
+  }
+
+  .main {
+    flex: 1 0 auto; /* Remove flex grow and allow content to set height */
+  }
 }
 </style>

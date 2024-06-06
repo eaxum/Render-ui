@@ -107,23 +107,36 @@ const toggleAddWorker = () => {
 }
 .main-container {
   font-family: 'poppins', sans-serif;
-  background-color: #292a39;
+  background: linear-gradient(to bottom, #2e1652, #4b3a78);
   position: relative;
-  height: 88vh;
+  height: 91vh;
   border-radius: 15px;
   overflow-y: auto;
+  margin-right: 10px;
   overflow-x: hidden;
 }
 .main-container::-webkit-scrollbar {
   width: 15px; /* Adjust width as needed */
 }
+.main-container::-webkit-scrollbar-track {
+  background-color: #292a39; /* Color for the scrollbar track */
+}
+.main-container::-webkit-scrollbar-thumb {
+  background-color: #666;
+  border-radius: 10px; /* Color for the scrollbar thumb */
+}
+.container::-webkit-scrollbar {
+  display: none; /* This hides the scrollbar */
+}
 .worker-container {
+  width: 100%;
   border-radius: 10px;
   margin-top: 20px;
   align-items: center;
   overflow-y: auto;
 }
 .worker-item {
+  position: inherit;
   background: #3b3d75;
   display: flex;
   justify-content: space-between;
@@ -132,6 +145,7 @@ const toggleAddWorker = () => {
   margin-left: 10px;
   align-items: center;
   cursor: pointer;
+  width: calc(100% - 20px);
 }
 .worker-container .task-title {
   position: fixed; /* Make the title sticky */

@@ -19,7 +19,7 @@ main {
   font-family: 'poppins', sans-serif;
   background-color: #4b356b;
   width: 100%;
-  height: 97vh;
+  height: 100%;
 }
 body {
   display: flex;

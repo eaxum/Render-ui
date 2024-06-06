@@ -12,6 +12,7 @@
         <router-link
           class="button"
           to="/"
+          exact-active-class="active"
           @mouseover="showJobText(true)"
           @mouseleave="showJobText(false)">
           <span class="quality action-column">
@@ -22,7 +23,8 @@
 
         <router-link
           class="button"
-          to="worker"
+          to="/worker"
+          exact-active-class="active"
           @mouseover="showNodeText(true)"
           @mouseleave="showNodeText(false)">
           <span class="quality action-column">
@@ -35,34 +37,9 @@
   </div>
 </template>
 
-<script setup>
-// const showShotText = (isHovering) => {
-//   const shotText = document.querySelector('.shot-text');
-//   shotText.style.visibility = isHovering ? 'visible' : 'hidden';
-// };
-// const showJobText = (isHovering) => {
-//   const jobText = document.querySelector('.job-text');
-//   jobText.style.visibility = isHovering ? 'visible' : 'hidden';
-// };
-// const showNodeText = (isHovering) => {
-//   const nodeText = document.querySelector('.node-text');
-//   nodeText.style.visibility = isHovering ? 'visible' : 'hidden';
-</script>
+<script setup></script>
 
 <style scoped>
-/*.shot-text {
-      background-color: #cecbcb;
-      border-radius: 10px;
-      padding: 20px;
-      margin-left: 5rem;
-      font-weight: 700;
-      font-size: 16pt;
-      visibility: hidden;
-      cursor:pointer;
-      position: absolute;
-      z-index: 1111;
-    }
-    */
 .shot-text {
   background-color: transparent;
   font-size: 12pt;
@@ -70,7 +47,7 @@
   color: black;
   opacity: 0.8;
   margin-bottom: 7rem;
-  margin-left: 0.6rem;
+  margin-left: 2rem;
   visibility: hidden;
   position: absolute;
   transition: 0.2s ease;
@@ -110,8 +87,9 @@
 aside {
   display: flex;
   flex-direction: column;
-  min-height: 92vh;
+  min-height: 94vh;
   margin-top: 10px;
+  margin-left: 10px;
   margin-right: 10px;
   border-radius: 10px;
   overflow: hidden;
@@ -170,11 +148,11 @@ aside {
   padding: 5px; /* Add padding */
   display: none; /* Initially hide the text */
   white-space: nowrap; /* Prevent text from wrapping */
-  overflow: hidden; /* Hide overflowing text */
+  overflow: hidden;
 }
 
 .quality.action-column:hover .text {
-  display: inline; /* Display the text when hovering */
+  display: inline;
 }
 
 .menu {
@@ -188,8 +166,8 @@ aside {
   padding: 0.5rem 1rem;
   margin-bottom: 7px;
   transition: 0.2s ease;
-  border-radius: 5px; /* Add border-radius for rounded corners */
-  transition: background-color 0.3s ease; /* Add transition for background color */
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
 }
 
 .button .material-icons {
@@ -198,14 +176,9 @@ aside {
   transition: 0.2s ease-out;
 }
 
-/*.button:hover,
-    .router-link-active.button {
-      background-color: blue;
-    }
-    */
-
-.router-link-active.button {
-  border-right: 5px solid var(--primary);
+.router-link-active .icons {
+  background: linear-gradient(to bottom, #7998d3, #9c5ac5);
+  color: white;
 }
 
 .is-expanded {
@@ -216,10 +189,19 @@ aside {
   color: white;
 }
 
-@media (max-width: 768px) {
-  aside {
-    position: fixed;
-    z-index: 99;
+@media screen and (max-width: 768px) {
+  .icons,
+  .icons-logo {
+    width: 2.5rem;
+  }
+
+  .logo .icons-logo {
+    margin-bottom: 5rem;
+  }
+
+  .button {
+    padding: 0.3rem 0.7rem;
+    margin-bottom: 5px;
   }
 }
 </style>

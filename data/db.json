@@ -1,40 +1,58 @@
 {
   "workers": [
     {
-      "name": "worekr 1",
+      "name": "worker 1",
       "workerStatus": "online",
       "address": "jdojfijfd",
       "id": "c996"
     },
     {
-      "name": "worekr 2",
+      "name": "worker 2",
       "workerStatus": "offline",
       "workerAddress": "iuxfiug",
       "id": "6828"
     },
     {
-      "name": "worekr 3",
+      "name": "worker 3",
       "workerStatus": "online",
       "workerAddress": "hgdfsdfs",
       "id": "2753"
     },
     {
-      "name": "worekr 4",
+      "name": "worker 4",
       "workerStatus": "offline",
       "workerAddress": "hgsdfgsdfs",
       "id": "5bd9"
+    }
+  ],
+  "tasks": [
+    {
+      "name": "Aremu",
+      "status": "rendering"
     },
     {
-      "id": "f46a",
-      "name": "zzzz",
-      "workerStatus": "idle",
-      "adress": "ddddd"
+      "name": "jumoke",
+      "status": "rendered"
     },
     {
-      "id": "b52d",
-      "name": "dasdada",
-      "workerStatus": "idle",
-      "adress": "asdadad"
+      "name": "jombosko",
+      "status": "rendering"
+    },
+    {
+      "name": "brown",
+      "status": "pending"
+    },
+    {
+      "name": "michael",
+      "status": "rendered"
+    },
+    {
+      "name": "chidera",
+      "status": "rendering"
+    },
+    {
+      "name": "davido",
+      "status": "pending"
     }
   ]
 }

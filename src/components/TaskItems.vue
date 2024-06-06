@@ -61,28 +61,7 @@
                   </option>
                 </select>
               </div>
-              <!-- <div class="input-modal">
-                <h4>Render Engine</h4>
-                <select v-model="taskStore.renderEngines">
-                  <option
-                    v-for="engine in taskStore.renderEngines"
-                    :key="engine"
-                    :value="engine">
-                    {{ engine }}
-                  </option>
-                </select>
-              </div> -->
-              <!-- <div class="input-modal">
-                <h4>Render Type</h4>
-                <select v-model="taskStore.jobTypes">
-                  <option
-                    v-for="jobType in taskStore.jobTypes"
-                    :key="jobType"
-                    :value="jobType">
-                    {{ jobType }}
-                  </option>
-                </select>
-              </div> -->
+
               <div class="input-modal">
                 <h4>Priority</h4>
                 <div class="render-input">
@@ -100,13 +79,6 @@
               </div>
             </div>
             <div class="grids">
-              <!-- <div class="input-modal">
-                <h4>Render Samples</h4>
-                <div class="render-input">
-                  <input type="number" v-model="renderSamples" />
-                </div>
-              </div> -->
-
               <div class="input-modal">
                 <h4>Frame Range</h4>
                 <div class="input-wrapper">
@@ -120,13 +92,6 @@
                     placeholder="frame-Y" />
                 </div>
               </div>
-              <!-- <div class="input-modal">
-                <h4>Resolution</h4>
-                <div class="input-wrapper">
-                  <input type="number" v-model="resolutionX" />
-                  <input type="number" v-model="resolutionY" />
-                </div>
-              </div> -->
             </div>
             <div class="buttons">
               <div class="first">
@@ -167,6 +132,59 @@
         </div>
       </div>
       <!-- Similarly for other filters like rendered, rendering, failed -->
+
+      <div class="task-container" v-if="filter === 'rendered'">
+        <div
+          class="task-item"
+          v-for="(task, index) in taskStore.renderedTasks"
+          :key="index">
+          <span class="item-text">
+            <p class="task-item-title">{{ task.name }}</p>
+          </span>
+          <span class="item-text">
+            <p class="task-item-status">{{ task.status }}</p>
+          </span>
+          <span class="item-text">
+            <button class="item-render">Remove</button>
+          </span>
+        </div>
+      </div>
+
+      <div class="task-container" v-if="filter === 'rendering'">
+        <div
+          class="task-item"
+          v-for="(task, index) in taskStore.renderingTasks"
+          :key="index">
+          <span class="item-text"
+            ><p class="task-item-title">{{ task.job_name }}</p></span
+          >
+          <span class="item-text"
+            ><p class="task-item-status">{{ task.job_status }}</p></span
+          >
+
+          <span class="item-text"
+            ><button class="item-render">Remove</button></span
+          >
+        </div>
+      </div>
+
+      <div class="task-container" v-if="filter === 'failed'">
+        <div
+          class="task-item"
+          v-for="(task, index) in taskStore.failedTasks"
+          :key="index">
+          <span class="item-text"
+            ><p class="task-item-title">{{ task.job_name }}</p></span
+          >
+          <span class="item-text"
+            ><p class="task-item-status">{{ task.job_status }}</p></span
+          >
+
+          <span class="item-text"
+            ><button class="item-render">Remove</button></span
+          >
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -390,20 +408,18 @@ const removeTask = async (taskId) => {
 }
 
 .main-container {
-  width: 100%; /* Use 100% width to make it responsive */
   font-family: 'poppins', sans-serif;
   background: linear-gradient(to bottom, #2e1652, #4b3a78);
   position: relative;
-  height: 88vh;
+  height: 91vh;
   border-radius: 15px;
   overflow-y: auto;
+  margin-right: 10px;
   overflow-x: hidden;
 }
-
 .main-container::-webkit-scrollbar {
   width: 15px; /* Adjust width as needed */
 }
-
 .main-container::-webkit-scrollbar-track {
   background-color: #292a39; /* Color for the scrollbar track */
 }
@@ -540,6 +556,7 @@ const removeTask = async (taskId) => {
   margin-top: 20px;
   align-items: center;
   overflow-y: auto;
+  cursor: none;
 }
 .task-container .task-title {
   position: fixed; /* Make the title sticky */

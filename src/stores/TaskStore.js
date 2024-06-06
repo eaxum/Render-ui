@@ -35,16 +35,6 @@ export const useTaskStore = defineStore('taskStore', {
     },
   },
   actions: {
-    // async fetchPresets() {
-    //   try {
-    //     const response = await axios.get('http://127.0.0.1:82/data/jobs/types');
-    //     console.log(response.data);
-    //     this.preset = response.data; // Assign fetched data to preset
-    //   } catch (error) {
-    //     console.error('Error fetching presets:', error);
-    //   }
-    // },
-
     async fetchPresets() {
       try {
         const response = await fetch('http://127.0.0.1:82/data/jobs/types');
@@ -54,39 +44,25 @@ export const useTaskStore = defineStore('taskStore', {
         }
 
         const data = await response.json();
-        console.log(data);
-        console.log(data.render_engine);
+        // console.log(data);
+        // console.log(data.render_engine);
         this.presets = data; // Assign fetched data to preset
       } catch (error) {
         console.error('Error fetching presets:', error);
       }
     },
 
-    //   async fetchTasks() {
-    //     try {
-    //       const response = await fetch('http://127.0.0.1:82/data/jobs');
-    //       if (!response.ok) {
-    //         throw new Error(`HTTP error! status: ${response.status}`);
-    //       }
-    //       const data = await response.json();
-    //       console.log(console.data);
-    //       this.tasks = data;
-    //     } catch (error) {
-    //       console.error('Error fetching tasks:', error);
-    //     }
-    //   },
-
-    // Other imports and code...
-
     async fetchTasks() {
+      let url = "'http://127.0.0.1:82/data/jobs'";
+      let testUrl = 'http://localhost:3000/tasks';
       try {
-        const response = await fetch('http://127.0.0.1:82/data/jobs');
+        const response = await fetch(testUrl);
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
         this.tasks = data;
       } catch (error) {
         console.error('Error fetching tasks:', error);
