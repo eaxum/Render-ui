@@ -1,5 +1,5 @@
 <template>
-  <div class="container" id="blur-body" @click="!addJob">
+  <div :class="{ container: true, blurred: addJob }" id="blurBody">
     <div class="search-option">
       <div class="toggle-buttons">
         <button @click="filter = 'all'" :class="{ active: filter === 'all' }">
@@ -26,7 +26,7 @@
       </div>
     </div>
     <teleport to="body">
-      <div v-if="addJob" ref="deleteModalRef">
+      <div v-if="addJob" ref="deleteModalRef" @click.stop>
         <form class="modals" @submit.prevent="handleSubmit">
           <div class="g">
             <div class="inputs">
@@ -61,7 +61,6 @@
                   </option>
                 </select>
               </div>
-
               <div class="input-modal">
                 <h4>Priority</h4>
                 <div class="render-input">
@@ -95,7 +94,7 @@
             </div>
             <div class="buttons">
               <div class="first">
-                <button @click="toggleAddJob">Cancel</button>
+                <button type="button" @click="toggleAddJob">Cancel</button>
                 <button type="submit">Render</button>
               </div>
             </div>
@@ -132,7 +131,6 @@
         </div>
       </div>
       <!-- Similarly for other filters like rendered, rendering, failed -->
-
       <div class="task-container" v-if="filter === 'rendered'">
         <div
           class="task-item"
@@ -149,40 +147,36 @@
           </span>
         </div>
       </div>
-
       <div class="task-container" v-if="filter === 'rendering'">
         <div
           class="task-item"
           v-for="(task, index) in taskStore.renderingTasks"
           :key="index">
-          <span class="item-text"
-            ><p class="task-item-title">{{ task.job_name }}</p></span
-          >
-          <span class="item-text"
-            ><p class="task-item-status">{{ task.job_status }}</p></span
-          >
-
-          <span class="item-text"
-            ><button class="item-render">Remove</button></span
-          >
+          <span class="item-text">
+            <p class="task-item-title">{{ task.job_name }}</p>
+          </span>
+          <span class="item-text">
+            <p class="task-item-status">{{ task.job_status }}</p>
+          </span>
+          <span class="item-text">
+            <button class="item-render">Remove</button>
+          </span>
         </div>
       </div>
-
       <div class="task-container" v-if="filter === 'failed'">
         <div
           class="task-item"
           v-for="(task, index) in taskStore.failedTasks"
           :key="index">
-          <span class="item-text"
-            ><p class="task-item-title">{{ task.job_name }}</p></span
-          >
-          <span class="item-text"
-            ><p class="task-item-status">{{ task.job_status }}</p></span
-          >
-
-          <span class="item-text"
-            ><button class="item-render">Remove</button></span
-          >
+          <span class="item-text">
+            <p class="task-item-title">{{ task.job_name }}</p>
+          </span>
+          <span class="item-text">
+            <p class="task-item-status">{{ task.job_status }}</p>
+          </span>
+          <span class="item-text">
+            <button class="item-render">Remove</button>
+          </span>
         </div>
       </div>
     </div>
@@ -190,7 +184,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 import { useTaskStore } from '@/stores/TaskStore';
 import axios from 'axios';
@@ -215,24 +209,28 @@ const renderEngine = ref('');
 
 const toggleAddJob = () => {
   addJob.value = !addJob.value;
-  showModal.value = false;
-  toggleModalBlur(addJob.value);
+  toggleBlurBody();
 };
 
-onClickOutside(deleteModalRef, toggleAddJob);
-
-const toggleModalBlur = (isBlurred) => {
-  document.body.classList.toggle('blur-body', isBlurred);
+const toggleBlurBody = () => {
+  const blurBody = document.getElementById('blurBody');
+  if (blurBody) {
+    blurBody.classList.toggle('blurred', addJob.value);
+  }
 };
+
+onClickOutside(deleteModalRef, () => {
+  addJob.value = false;
+  toggleBlurBody();
+});
 
 const handleSubmit = async () => {
   const preset = taskStore.presets.find((p) => p.id === selectedPreset.value);
-
   const jobTypeName = preset ? preset.name : '';
 
   try {
     const newTask = {
-      job_type_name: jobTypeName, // Use the name of the preset
+      job_type_name: jobTypeName,
       name: jobName.value,
       file_path: jobFilePath.value,
       resolution_Percentage: resolutionPercentage.value,
@@ -268,7 +266,7 @@ const handleSubmit = async () => {
 onMounted(async () => {
   await taskStore.fetchPresets();
   await taskStore.fetchTasks();
-  selectedPreset.value = taskStore.presets[0].id;
+  selectedPreset.value = taskStore.presets[0]?.id;
 });
 
 watch(selectedPreset, (newPresetId) => {
@@ -282,7 +280,9 @@ watch(selectedPreset, (newPresetId) => {
 
 const removeTask = async (taskId) => {
   try {
-    await axios.delete(`http://127.0.0.1:82/data/jobs/${taskId}`);
+    await fetch(`http://127.0.0.1:82/data/jobs/${taskId}`, {
+      method: 'DELETE',
+    });
     taskStore.fetchTasks();
   } catch (error) {
     console.error('Error removing task:', error);
@@ -291,8 +291,13 @@ const removeTask = async (taskId) => {
 </script>
 
 <style scoped>
+.blurred {
+  filter: blur(8px);
+  -webkit-filter: blur(8px);
+}
+
 .container {
-  display: flex; /* Use flexbox for layout */
+  display: flex;
   flex-direction: column;
   height: 100%;
 }
@@ -310,11 +315,7 @@ const removeTask = async (taskId) => {
 }
 .input-modal h4 {
   font-family: 'poppins', sans-serif;
-  display: absolute;
-  left: 20px;
   font-size: 20px;
-  justify-content: center;
-  align-items: center;
   text-align: center;
 }
 .render-input input {
@@ -361,6 +362,10 @@ const removeTask = async (taskId) => {
   position: relative;
   padding-top: 15px;
 }
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
 .input-field {
   margin-top: 40px;
   width: 500px;
@@ -404,7 +409,6 @@ const removeTask = async (taskId) => {
 }
 .toggle-buttons button.active {
   background-color: #41435f;
-  /* Add any other styles you want for active buttons */
 }
 
 .main-container {
@@ -418,27 +422,24 @@ const removeTask = async (taskId) => {
   overflow-x: hidden;
 }
 .main-container::-webkit-scrollbar {
-  width: 15px; /* Adjust width as needed */
+  width: 15px;
 }
 .main-container::-webkit-scrollbar-track {
-  background-color: #292a39; /* Color for the scrollbar track */
+  background-color: #292a39;
 }
-
 .main-container::-webkit-scrollbar-thumb {
   background-color: #666;
-  border-radius: 10px; /* Color for the scrollbar thumb */
+  border-radius: 10px;
 }
 .container::-webkit-scrollbar {
-  display: none; /* This hides the scrollbar */
+  display: none;
 }
-
 .search-option {
   display: flex;
   justify-content: space-between;
   margin-right: 10px;
   margin-bottom: 5px;
 }
-
 .toggle-buttons {
   display: flex;
   margin-top: 10px;
@@ -446,7 +447,6 @@ const removeTask = async (taskId) => {
   gap: 10px;
 }
 .toggle-buttons button {
-  /*padding: 13px 25px;*/
   width: 210px;
   height: 50px;
   background-color: #292a39;
@@ -456,46 +456,6 @@ const removeTask = async (taskId) => {
   border-radius: 10px;
   font-size: 15pt;
 }
-.search input {
-  background-color: #292a39;
-  border: none;
-  outline: none !important;
-  color: white;
-  padding: 26px 355px;
-  margin-right: 290px;
-  border-radius: 10px;
-}
-.search input::placeholder {
-  justify-content: start;
-  font-size: 16pt;
-  color: #fff;
-}
-.input-task {
-  display: flex;
-  gap: 10px;
-}
-.input-task input {
-  background-color: #292a39;
-  border: none;
-  outline: none !important;
-  color: white;
-  padding: 26px 170px;
-  border-radius: 10px;
-}
-.input-task input::placeholder {
-  justify-content: start;
-  font-size: 16pt;
-  color: #fff;
-}
-.input-task button {
-  background-color: #3c8b35;
-  border: none;
-  outline: none !important;
-  color: white;
-  padding: 26px 40px;
-  border-radius: 10px;
-}
-
 .add-tasks button {
   margin-top: 10px;
   position: relative;
@@ -509,7 +469,6 @@ const removeTask = async (taskId) => {
   outline: none;
 }
 .header-wrapper-container {
-  /*background-color: blue;*/
   border-radius: 10px;
   margin-top: 10px;
   align-items: center;
@@ -523,7 +482,6 @@ const removeTask = async (taskId) => {
   padding-top: 10px;
   padding-bottom: 10px;
   background-color: #1a1b33;
-
   border-radius: 10px;
   margin: 10px 0px;
   align-items: center;
@@ -535,9 +493,6 @@ const removeTask = async (taskId) => {
   display: flex;
   flex-direction: row;
   align-items: center;
-  /* gap: 10px; */
-  border-radius: 10px;
-  /* background: #a93bc5; */
   cursor: pointer;
   justify-content: space-between;
 }
@@ -559,11 +514,11 @@ const removeTask = async (taskId) => {
   cursor: none;
 }
 .task-container .task-title {
-  position: fixed; /* Make the title sticky */
-  top: 159px; /* Stick it at the top */
-  background-color: #292a39; /* Background color */
-  z-index: 1; /* Ensure it's above other elements */
-  padding: 10px 0; /* Add some padding for spacing */
+  position: fixed;
+  top: 159px;
+  background-color: #292a39;
+  z-index: 1;
+  padding: 10px 0;
   margin-bottom: 80px;
 }
 .task-item {
@@ -576,9 +531,7 @@ const removeTask = async (taskId) => {
   margin-left: 10px;
   align-items: center;
   cursor: pointer;
-  width: calc(
-    100% - 20px
-  ); /* Adjust the width to fit within the parent container */
+  width: calc(100% - 20px);
 }
 .item-text {
   margin-left: 20px;
@@ -591,11 +544,10 @@ const removeTask = async (taskId) => {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-
 .item-text-wrapper {
-  white-space: nowrap; /* Prevents text from wrapping to the next line */
-  overflow: hidden; /* Hides overflowed text */
-  text-overflow: ellipsis; /* Adds ellipsis (...) to overflowed text */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   margin-left: 20px;
   margin-right: 110px;
   color: white;
@@ -626,7 +578,6 @@ const removeTask = async (taskId) => {
   padding: 5px 10px;
   border-radius: 10px;
 }
-
 .item-render {
   color: white;
   padding: 10px 50px;
@@ -635,32 +586,26 @@ const removeTask = async (taskId) => {
   font-size: 16px;
   background-color: rgb(240, 81, 81);
 }
-
 .modals {
-  position: fixed; /* Fixes the modal to the viewport */
-  top: 50%; /* Centers the modal vertically */
-  left: 50%; /* Centers the modal horizontally */
-  transform: translate(
-    -50%,
-    -50%
-  ); /* Adjusts the position to keep it centered */
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   border-radius: 10px;
-  width: 90%; /* Use a percentage to make it responsive */
-  max-width: 1400px; /* Set a max-width to prevent it from becoming too wide */
-  padding: 20px; /* Add some padding */
-  background-color: #2c2e4e; /* Background color of the modal */
-  z-index: 1000; /* Ensure it stays on top of other elements */
-  overflow: auto; /* Ensure it scrolls if the content is too large */
+  width: 90%;
+  max-width: 1400px;
+  padding: 20px;
+  background-color: #2c2e4e;
+  z-index: 1000;
+  overflow: auto;
 }
-
 .modals > div {
   background-color: #2c2e4e;
   border-radius: 10px;
-  width: 100%; /* Make it take the full width of the .modals container */
+  width: 100%;
   height: 600px;
-  /* Let it adjust the height based on its content */
-  max-height: 90vh; /* Ensure it doesn't exceed the viewport height */
-  overflow: auto; /* Allow scrolling if content overflows */
+  max-height: 90vh;
+  overflow: auto;
 }
 .modal-input h4 {
   font-size: 20px;
@@ -671,18 +616,11 @@ const removeTask = async (taskId) => {
   display: block;
   width: 80%;
   font-size: 16px;
-  /*background-color: #292a39;*/
   border: none;
   outline: none !important;
   color: white;
   padding: 15px 20px;
   border-radius: 10px;
-}
-
-.modals > div {
-  background-color: #2c2e4e;
-  border-radius: 10px;
-  width: 1360px;
 }
 .grid {
   top: 20;
@@ -703,7 +641,6 @@ const removeTask = async (taskId) => {
   color: white;
   font-size: 23px;
 }
-
 .buttons button:first-child {
   background-color: #f44336;
   color: white;
@@ -716,18 +653,6 @@ const removeTask = async (taskId) => {
   outline: none !important;
   border-radius: 10px;
 }
-/*input,
-select {
-  display: block;
-  background-color: #292a39;
-  padding: 15px 50px;
-  border-radius: 10px;
-  box-sizing: border-box;
-  border: none;
-  border-radius: 10px;
-  font-size: 1em;
-} */
-
 .flex {
   display: flex;
   gap: 10px;
@@ -738,18 +663,15 @@ select {
   margin-left: 20px;
 }
 .task-item-status.pending {
-  background-color: #f9d043 !important; /* Light yellow for pending */
+  background-color: #f9d043 !important;
 }
-
 .task-item-status.rendering {
-  background-color: #4caf50 !important; /* Light green for running */
+  background-color: #4caf50 !important;
 }
-
 .item-text.completed {
-  background-color: #673ab7 !important; /* Light purple for completed */
+  background-color: #673ab7 !important;
 }
-
 .task-item-status.failed {
-  background-color: #f44336 !important; /* Light red for failed */
+  background-color: #f44336 !important;
 }
 </style>

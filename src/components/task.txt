@@ -931,3 +931,34 @@ export const useTaskStore = defineStore('taskStore', {
     },
   },
 });
+
+
+
+
+
+
+
+
+watch(selectedPreset, (newPresetId) => {
+  const preset = taskStore.presets.find((p) => p.id === newPresetId);
+  if (preset) {
+    frameRangeX.value = preset.start_frame;
+    frameRangeY.value = preset.end_frame;
+    resolutionPercentage.value = preset.resolution_percentage;
+  }
+});
+
+
+
+
+
+const removeTask = async (taskId) => {
+  try {
+    await fetch(`http://127.0.0.1:82/data/jobs/${taskId}`, {
+      method: 'DELETE',
+    });
+    taskStore.fetchTasks();
+  } catch (error) {
+    console.error('Error removing task:', error);
+  }
+};

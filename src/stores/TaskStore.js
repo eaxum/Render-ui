@@ -46,23 +46,26 @@ export const useTaskStore = defineStore('taskStore', {
         const data = await response.json();
         // console.log(data);
         // console.log(data.render_engine);
-        this.presets = data; // Assign fetched data to preset
+        this.presets = data;
       } catch (error) {
         console.error('Error fetching presets:', error);
       }
     },
 
     async fetchTasks() {
-      let url = "'http://127.0.0.1:82/data/jobs'";
+      let url = 'http://127.0.0.1:82/data/jobs';
       let testUrl = 'http://localhost:3000/tasks';
+
       try {
-        const response = await fetch(testUrl);
+        const response = await fetch(url);
+        console.log(response);
 
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          const errorPayload = await response.json();
+          throw new Error(`Error fetching tasks: ${errorPayload.error}`);
         }
+
         const data = await response.json();
-        // console.log(data);
         this.tasks = data;
       } catch (error) {
         console.error('Error fetching tasks:', error);

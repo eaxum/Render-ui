@@ -20,10 +20,7 @@
 
     <div class="main-container">
       <div class="worker-container">
-        <div
-          class="worker-item"
-          v-for="(worker, index) in workerStore.workers"
-          :key="index">
+        <div class="worker-item" v-for="worker in workers" :key="worker.id">
           <span class="item-text">
             <p class="task-item-title">{{ worker.name }}</p>
           </span>
@@ -51,11 +48,6 @@ const newWorker = ref('');
 const workerAdress = ref('');
 
 workerStore.getWorkers();
-
-const toggleAddWorker = () => {
-  addWorker.value = !addWorker.value;
-  showModal.value = false; // Close the modal when toggling addJob
-};
 
 // onClickOutside(deleteModalRef, toggleAddWorker);
 // const handleSubmit = () => {

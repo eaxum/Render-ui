@@ -9,24 +9,14 @@
       </div>
 
       <div class="menu">
-        <router-link
-          class="button"
-          to="/"
-          exact-active-class="active"
-          @mouseover="showJobText(true)"
-          @mouseleave="showJobText(false)">
+        <router-link class="button" to="/" exact-active-class="active">
           <span class="quality action-column">
             <img class="icons" src="./../assets/jobs.png" alt="Quality Icon" />
           </span>
           <!-- <p class="job-text">jobs</p> -->
         </router-link>
 
-        <router-link
-          class="button"
-          to="/worker"
-          exact-active-class="active"
-          @mouseover="showNodeText(true)"
-          @mouseleave="showNodeText(false)">
+        <router-link class="button" to="/worker" exact-active-class="active">
           <span class="quality action-column">
             <img class="icons" src="./../assets/nodes.png" alt="Quality Icon" />
           </span>

@@ -9,31 +9,42 @@ export const useWorkerStore = defineStore('workerStore', {
   }),
   getters: {},
   actions: {
+    // async getWorkers() {
+    //   let testUrl = 'http://localhost:3000/workers';
+    //   let url = 'http://127.0.0.1:82/workers';
+
+    //   this.loading = true;
+    //   try {
+    //     const response = await axios.get(url);
+    //     this.workers = response.data;
+    //     console.log(workers);
+    //   } catch (error) {
+    //     console.error('Error fetching workers:', error);
+    //     // Handle error (e.g., show error message to user)
+    //   } finally {
+    //     this.loading = false;
+    //   }
+    // },
+
     async getWorkers() {
-      let url = 'http://localhost:3000/workers';
-      let testUrl = "'http://localhost:5000/workers'";
+      let testUrl = 'http://localhost:3000/workers';
+      let url = 'http://127.0.0.1:82/worker';
+
       this.loading = true;
       try {
-        const response = await axios.get(url);
-        this.workers = response.data;
-        console.log(data);
+        const response = await fetch(url);
+        console.log(response.data);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        this.workers = data;
+        console.log(this.workers);
       } catch (error) {
         console.error('Error fetching workers:', error);
         // Handle error (e.g., show error message to user)
       } finally {
         this.loading = false;
-      }
-    },
-    async addWorker(worker) {
-      this.workers.push(worker);
-
-      const response = await fetch('http://localhost:3000/workers', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(worker), // Convert object to JSON string
-      });
-      if (response.error) {
-        console.log(response.error);
       }
     },
   },
