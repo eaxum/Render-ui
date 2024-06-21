@@ -36,31 +36,11 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
-// import { onClickOutside } from '@vueuse/core';
 import { useWorkerStore } from '@/stores/WorkerStore';
 
 const workerStore = useWorkerStore();
-const addWorker = ref(false);
-const showModal = ref(false);
-const deleteModalRef = ref(null);
-const newWorker = ref('');
-const workerAdress = ref('');
 
 workerStore.getWorkers();
-
-// onClickOutside(deleteModalRef, toggleAddWorker);
-// const handleSubmit = () => {
-//   if (newWorker.value.length > 0) {
-//     workerStore.addWorker({
-//       name: newWorker.value,
-//       workerStatus: workerStore.workerStatus,
-//       adress: workerAdress.value,
-//     });
-//     newWorker.value = '';
-//     workerAdress.value = '';
-//   }
-// };
 </script>
 
 <style scoped>

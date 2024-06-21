@@ -31,7 +31,7 @@
           <div class="g">
             <div class="inputs">
               <div class="field-group">
-                <label for="name" class="input-label">Job Name</label>
+                <!-- <label for="name" class="input-label">Job Name</label> -->
                 <input
                   type="text"
                   name="name"
@@ -40,7 +40,7 @@
                   placeholder="name" />
               </div>
               <div class="field-group">
-                <label for="file" class="input-label">File path</label>
+                <!-- <label for="file" class="input-label">File path</label> -->
                 <input
                   type="text"
                   name="file"
@@ -115,8 +115,8 @@
             <p
               class="task-item-status"
               :class="{
-                pending: task.status === 'pending',
-                running: task.status === 'running',
+                pending: task.status === 'queued',
+                running: task.status === 'rendering',
                 completed: task.status === 'completed',
                 failed: task.status === 'failed',
               }">
@@ -131,10 +131,10 @@
         </div>
       </div>
       <!-- Similarly for other filters like rendered, rendering, failed -->
-      <div class="task-container" v-if="filter === 'rendered'">
+      <div class="task-container" v-if="filter === 'completed'">
         <div
           class="task-item"
-          v-for="(task, index) in taskStore.renderedTasks"
+          v-for="(task, index) in taskStore.completed"
           :key="index">
           <span class="item-text">
             <p class="task-item-title">{{ task.name }}</p>
@@ -153,10 +153,10 @@
           v-for="(task, index) in taskStore.renderingTasks"
           :key="index">
           <span class="item-text">
-            <p class="task-item-title">{{ task.job_name }}</p>
+            <p class="task-item-title">{{ task.name }}</p>
           </span>
           <span class="item-text">
-            <p class="task-item-status">{{ task.job_status }}</p>
+            <p class="task-item-status">{{ task.status }}</p>
           </span>
           <span class="item-text">
             <button class="item-render">Remove</button>
@@ -172,7 +172,7 @@
             <p class="task-item-title">{{ task.job_name }}</p>
           </span>
           <span class="item-text">
-            <p class="task-item-status">{{ task.job_status }}</p>
+            <p class="task-item-status">{{ task.status }}</p>
           </span>
           <span class="item-text">
             <button class="item-render">Remove</button>
@@ -197,7 +197,7 @@ const deleteModalRef = ref(null);
 
 const jobName = ref('');
 const jobFilePath = ref('');
-const priority = ref('');
+const priority = ref('50');
 const resolutionX = ref(1920);
 const resolutionY = ref(1080);
 const frameRangeX = ref('');
@@ -263,6 +263,17 @@ const handleSubmit = async () => {
   }
 };
 
+const removeTask = async (taskId) => {
+  try {
+    await fetch(`http://127.0.0.1:82/data/jobs/${taskId}`, {
+      method: 'DELETE',
+    });
+    taskStore.fetchTasks();
+  } catch (error) {
+    console.error('Error removing task:', error);
+  }
+};
+
 onMounted(async () => {
   await taskStore.fetchPresets();
   await taskStore.fetchTasks();
@@ -277,17 +288,6 @@ watch(selectedPreset, (newPresetId) => {
     resolutionPercentage.value = preset.resolution_percentage;
   }
 });
-
-const removeTask = async (taskId) => {
-  try {
-    await fetch(`http://127.0.0.1:82/data/jobs/${taskId}`, {
-      method: 'DELETE',
-    });
-    taskStore.fetchTasks();
-  } catch (error) {
-    console.error('Error removing task:', error);
-  }
-};
 </script>
 
 <style scoped>
@@ -301,17 +301,17 @@ const removeTask = async (taskId) => {
   flex-direction: column;
   height: 100%;
 }
+
 .grids {
-  margin-top: 50px;
-  display: flex;
+  display: block;
   justify-content: center;
   gap: 10px;
 }
 .input-modal {
   border-radius: 10px;
   background: rgb(174, 174, 228);
-  width: 320px;
-  height: 130px;
+  width: 457px;
+  height: 110px;
 }
 .input-modal h4 {
   font-family: 'poppins', sans-serif;
@@ -319,12 +319,12 @@ const removeTask = async (taskId) => {
   text-align: center;
 }
 .render-input input {
-  position: relative;
+  position: absolute;
   width: 250px;
   border-radius: 10px;
   height: 40px;
   border: none;
-  margin-left: 30px;
+  margin-left: 70px;
 }
 .input-modal .input-wrapper {
   justify-content: center;
@@ -351,14 +351,12 @@ const removeTask = async (taskId) => {
   margin-left: 10px;
 }
 .inputs {
-  margin-left: 60px;
-  display: flex;
+  display: block;
   gap: 160px;
   justify-content: center;
   align-items: center;
 }
 .field-group {
-  width: 600px;
   position: relative;
   padding-top: 15px;
 }
@@ -367,7 +365,7 @@ input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;
 }
 .input-field {
-  margin-top: 40px;
+  /* <!-- margin-top: 40px;
   width: 500px;
   outline: 0;
   border: 0;
@@ -376,7 +374,13 @@ input[type='number']::-webkit-outer-spin-button {
   padding: 0px 0;
   background: transparent;
   font-size: 26px;
-  transition: 0.3s ease;
+  transition: 0.3s ease; -->*/
+  position: relative;
+  width: 450px;
+  border-radius: 10px;
+  height: 50px;
+  font-size: 16pt;
+  border: none;
 }
 .input-label {
   display: block;
@@ -389,10 +393,10 @@ input[type='number']::-webkit-outer-spin-button {
   transition: 0.3s ease;
 }
 .input-field::placeholder {
-  color: transparent;
-  font-size: 18pt;
+  color: rgb(121, 105, 105);
+  font-size: 14pt;
 }
-.input-field:placeholder-shown ~ .input-label {
+.input-field:placeholder input-label {
   font-size: 15pt;
   top: 35px;
 }
@@ -592,25 +596,21 @@ input[type='number']::-webkit-outer-spin-button {
   left: 50%;
   transform: translate(-50%, -50%);
   border-radius: 10px;
-  width: 90%;
-  max-width: 1400px;
+  width: 27%;
+  max-width: 500px;
   padding: 20px;
   background-color: #2c2e4e;
-  z-index: 1000;
-  overflow: auto;
 }
 .modals > div {
   background-color: #2c2e4e;
   border-radius: 10px;
-  width: 100%;
-  height: 600px;
+  height: 800px;
   max-height: 90vh;
   overflow: auto;
 }
 .modal-input h4 {
   font-size: 20px;
   text-align: center;
-  margin-right: 47px;
 }
 .modal-input input {
   display: block;
@@ -622,14 +622,9 @@ input[type='number']::-webkit-outer-spin-button {
   padding: 15px 20px;
   border-radius: 10px;
 }
-.grid {
-  top: 20;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-}
+
 .buttons {
-  top: 520px;
-  left: 400px;
+  top: 720px;
   position: absolute;
   align-items: center;
   display: grid;
@@ -647,7 +642,7 @@ input[type='number']::-webkit-outer-spin-button {
   font-size: 23px;
 }
 .buttons button {
-  width: 250px;
+  width: 220px;
   height: 60px;
   border: none;
   outline: none !important;
@@ -660,7 +655,6 @@ input[type='number']::-webkit-outer-spin-button {
 .first {
   gap: 10px;
   display: flex;
-  margin-left: 20px;
 }
 .task-item-status.pending {
   background-color: #f9d043 !important;

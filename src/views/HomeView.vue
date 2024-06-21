@@ -5,8 +5,8 @@ import TaskItems from '@/components/TaskItems.vue';
 
 <template>
   <main>
-    <body>
-      <SideBar />
+    <body :class="{ blurred: addJob }">
+      <SideBar :class="{ blurred: addJob }" />
       <div class="main">
         <TaskItems />
       </div>
@@ -15,6 +15,10 @@ import TaskItems from '@/components/TaskItems.vue';
 </template>
 
 <style scoped>
+.blurred {
+  filter: blur(8px);
+  -webkit-filter: blur(8px);
+}
 main {
   font-family: 'poppins', sans-serif;
   background-color: #4b356b;

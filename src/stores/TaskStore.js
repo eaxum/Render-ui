@@ -25,7 +25,7 @@ export const useTaskStore = defineStore('taskStore', {
     // },
 
     renderedTasks() {
-      return this.tasks.filter((task) => task.job_status === 'Completed');
+      return this.tasks.filter((task) => task.job_status === 'completed');
     },
     renderingTasks() {
       return this.tasks.filter((task) => task.job_status === 'Rendering');
@@ -35,6 +35,18 @@ export const useTaskStore = defineStore('taskStore', {
     },
   },
   actions: {
+    async toggleBlurBody() {
+      const blurBody = document.getElementById('blurBody');
+      if (blurBody) {
+        blurBody.classList.toggle('blurred', addJob.value);
+      }
+    },
+
+    async toggleAddJob() {
+      addJob.value = !addJob.value;
+      toggleBlurBody();
+    },
+
     async fetchPresets() {
       try {
         const response = await fetch('http://127.0.0.1:82/data/jobs/types');
