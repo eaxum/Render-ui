@@ -1,12 +1,19 @@
 <script setup>
 import SideBar from '@/components/SideBar.vue';
 import TaskItems from '@/components/TaskItems.vue';
+
+const toggleBlurBody = () => {
+  const blurBody = document.getElementById('blurBody');
+  if (blurBody) {
+    blurBody.classList.toggle('blurred', addJob.value);
+  }
+};
 </script>
 
 <template>
   <main>
-    <body :class="{ blurred: addJob }">
-      <SideBar :class="{ blurred: addJob }" />
+    <body :class="blurred">
+      <SideBar @change="toggleBlurBody" />
       <div class="main">
         <TaskItems />
       </div>

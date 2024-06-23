@@ -1,42 +1,57 @@
 <template>
-  <div class="container">
-    <div :class="{ sidebar: true, blurred: addJob }">
-      <aside>
-        <div class="logo">
-          <img
-            class="icons-logo"
-            src="./../assets/aizen.png"
-            alt="Quality Icon" />
-        </div>
-        <div class="menu">
-          <router-link class="button" to="/" exact-active-class="active">
-            <span class="quality action-column">
-              <img
-                class="icons"
-                src="./../assets/jobs.png"
-                alt="Quality Icon" />
-            </span>
-            <!-- <p class="job-text">jobs</p> -->
-          </router-link>
-          <router-link class="button" to="/worker" exact-active-class="active">
-            <span class="quality action-column">
-              <img
-                class="icons"
-                src="./../assets/nodes.png"
-                alt="Quality Icon" />
-            </span>
-            <!-- <p class="node-text">workers</p> -->
-          </router-link>
-        </div>
-      </aside>
+  <div id="blurred">
+    <div class="container">
+      <div :class="{ sidebar: true, blurred: addJob }">
+        <aside>
+          <div class="logo">
+            <img
+              class="icons-logo"
+              src="./../assets/aizen.png"
+              alt="Quality Icon" />
+          </div>
+          <div class="menu">
+            <router-link class="button" to="/" exact-active-class="active">
+              <span class="quality action-column">
+                <img
+                  class="icons"
+                  src="./../assets/jobs.png"
+                  alt="Quality Icon" />
+              </span>
+              <!-- <p class="job-text">jobs</p> -->
+            </router-link>
+            <router-link
+              class="button"
+              to="/worker"
+              exact-active-class="active">
+              <span class="quality action-column">
+                <img
+                  class="icons"
+                  src="./../assets/nodes.png"
+                  alt="Quality Icon" />
+              </span>
+              <!-- <p class="node-text">workers</p> -->
+            </router-link>
+          </div>
+        </aside>
+      </div>
     </div>
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { ref } from 'vue';
+const blurred = ref('false');
+
+// const toggleBlurBody = () => {
+//   const blurBody = document.getElementById('blurred');
+//   if (blurBody) {
+//     blurBody.classList.toggle('blurred');
+//   }
+// };
+</script>
 
 <style scoped>
-.blurred {
+#blurred {
   filter: blur(8px);
   -webkit-filter: blur(8px);
 }

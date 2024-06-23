@@ -6,13 +6,13 @@
           All Jobs
         </button>
         <button
-          @click="filter = 'rendered'"
-          :class="{ active: filter === 'rendered' }">
+          @click="filter = 'renderedTasks'"
+          :class="{ active: filter === 'renderedTasks' }">
           Rendered Jobs
         </button>
         <button
-          @click="filter = 'rendering'"
-          :class="{ active: filter === 'rendering' }">
+          @click="filter = 'renderingTasks'"
+          :class="{ active: filter === 'renderingTasks' }">
           Rendering Jobs
         </button>
         <button
@@ -131,10 +131,10 @@
         </div>
       </div>
       <!-- Similarly for other filters like rendered, rendering, failed -->
-      <div class="task-container" v-if="filter === 'completed'">
+      <div class="task-container" v-if="filter === 'renderedTasks'">
         <div
           class="task-item"
-          v-for="(task, index) in taskStore.completed"
+          v-for="(task, index) in taskStore.renderedTasks"
           :key="index">
           <span class="item-text">
             <p class="task-item-title">{{ task.name }}</p>
@@ -147,7 +147,7 @@
           </span>
         </div>
       </div>
-      <div class="task-container" v-if="filter === 'rendering'">
+      <div class="task-container" v-if="filter === 'renderingTasks'">
         <div
           class="task-item"
           v-for="(task, index) in taskStore.renderingTasks"
@@ -187,25 +187,25 @@
 import { ref, onMounted, watch } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 import { useTaskStore } from '@/stores/TaskStore';
-import axios from 'axios';
+// import axios from 'axios';
 
 const taskStore = useTaskStore();
 const filter = ref('all');
 const addJob = ref(false);
-const showModal = ref(false);
+// const showModal = ref(false);
 const deleteModalRef = ref(null);
 
 const jobName = ref('');
 const jobFilePath = ref('');
 const priority = ref('50');
-const resolutionX = ref(1920);
-const resolutionY = ref(1080);
+// const resolutionX = ref(1920);
+// const resolutionY = ref(1080);
 const frameRangeX = ref('');
 const frameRangeY = ref('');
-const renderSamples = ref(100);
+// const renderSamples = ref(100);
 const resolutionPercentage = ref('');
 const selectedPreset = ref('');
-const renderEngine = ref('');
+// const renderEngine = ref('');
 
 const toggleAddJob = () => {
   addJob.value = !addJob.value;
@@ -291,6 +291,12 @@ watch(selectedPreset, (newPresetId) => {
 </script>
 
 <style scoped>
+.g {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 .blurred {
   filter: blur(8px);
   -webkit-filter: blur(8px);
@@ -511,7 +517,7 @@ input[type='number']::-webkit-outer-spin-button {
 }
 .task-container {
   width: 100%;
-  border-radius: 10px;
+  border-radius: 0px;
   margin-top: 20px;
   align-items: center;
   overflow-y: auto;
@@ -530,7 +536,7 @@ input[type='number']::-webkit-outer-spin-button {
   background: #3b3d75;
   display: flex;
   justify-content: space-between;
-  border-radius: 10px;
+  border-radius: 20px;
   margin-bottom: 10px;
   margin-left: 10px;
   align-items: center;
@@ -596,7 +602,7 @@ input[type='number']::-webkit-outer-spin-button {
   left: 50%;
   transform: translate(-50%, -50%);
   border-radius: 10px;
-  width: 27%;
+  width: 550px;
   max-width: 500px;
   padding: 20px;
   background-color: #2c2e4e;
@@ -624,12 +630,9 @@ input[type='number']::-webkit-outer-spin-button {
 }
 
 .buttons {
-  top: 720px;
-  position: absolute;
   align-items: center;
-  display: grid;
+  display: flex;
   gap: 230px;
-  grid-template-columns: 1fr 1fr;
 }
 .buttons button[type='submit'] {
   background-color: #4caf50;
@@ -642,6 +645,7 @@ input[type='number']::-webkit-outer-spin-button {
   font-size: 23px;
 }
 .buttons button {
+  margin-top: 10px;
   width: 220px;
   height: 60px;
   border: none;
@@ -659,10 +663,10 @@ input[type='number']::-webkit-outer-spin-button {
 .task-item-status.pending {
   background-color: #f9d043 !important;
 }
-.task-item-status.rendering {
+.task-item-status.renderingTasks {
   background-color: #4caf50 !important;
 }
-.item-text.completed {
+.item-text.renderedTasks {
   background-color: #673ab7 !important;
 }
 .task-item-status.failed {

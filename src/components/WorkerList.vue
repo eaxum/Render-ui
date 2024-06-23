@@ -20,13 +20,16 @@
 
     <div class="main-container">
       <div class="worker-container">
-        <div class="worker-item" v-for="worker in workers" :key="worker.id">
+        <div
+          class="worker-item"
+          v-for="worker in workerStore.workers"
+          :key="worker.id">
           <span class="item-text">
             <p class="task-item-title">{{ worker.name }}</p>
           </span>
 
           <span class="item-text">
-            <button class="item-render">{{ worker.workerStatus }}</button>
+            <button class="item-render">{{ worker.status }}</button>
           </span>
         </div>
       </div>

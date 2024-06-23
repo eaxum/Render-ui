@@ -25,27 +25,28 @@ export const useTaskStore = defineStore('taskStore', {
     // },
 
     renderedTasks() {
-      return this.tasks.filter((task) => task.job_status === 'completed');
+      return this.tasks.filter((task) => task.status === 'completed');
     },
     renderingTasks() {
-      return this.tasks.filter((task) => task.job_status === 'Rendering');
+      return this.tasks.filter((task) => task.status === 'Rendering');
     },
     failedTasks() {
-      return this.tasks.filter((task) => task.job_status === 'failed');
+      return this.tasks.filter((task) => task.status === 'failed');
     },
   },
   actions: {
+    //move the addjob and toggleblurbody to Store then make it axctive
     async toggleBlurBody() {
-      const blurBody = document.getElementById('blurBody');
-      if (blurBody) {
-        blurBody.classList.toggle('blurred', addJob.value);
-      }
+      // const blurBody = document.getElementById('blurBody');
+      // if (blurBody) {
+      //   blurBody.classList.toggle('blurred', addJob.value);
+      // }
     },
 
-    async toggleAddJob() {
-      addJob.value = !addJob.value;
-      toggleBlurBody();
-    },
+    // async toggleAddJob() {
+    //   addJob.value = !addJob.value;
+    //   toggleBlurBody();
+    // },
 
     async fetchPresets() {
       try {
